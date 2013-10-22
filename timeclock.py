@@ -9,6 +9,7 @@ db = SQLAlchemy(app)
 
 
 class Punch(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150))
     time = db.Column(db.DateTime())
     status = db.Column(db.Enum('in', 'out'))
