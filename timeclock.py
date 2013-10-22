@@ -22,7 +22,9 @@ class Punch(db.Model):
         previous_punch = Punch.query.filter_by(
             name=name).order_by(Punch.time.desc()).first()
 
-        if previous_punch.status == 'in':
+        if not previous_punch:
+            self.status = 'in'
+        elif previous_punch.status == 'in':
             self.status = 'out'
         else:
             self.status = 'in'
