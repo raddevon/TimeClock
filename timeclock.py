@@ -8,7 +8,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = SQLAlchemy(app)
 
 
-class Punch(db.model):
+class Punch(db.Model):
     name = db.Column(db.String(150))
     time = db.Column(db.DateTime())
     status = db.Column(db.Enum('in', 'out'))
