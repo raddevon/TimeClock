@@ -33,24 +33,47 @@ class Punch(db.Model):
         return '<Punch {} at {}>'.format(self.name, self.time.strftime('%m-%d-%y %H:%M'))
 
 
-@app.route('/punch/<name>')
+@app.route('/punch/<name>/')
 def punch(name):
     new_punch = Punch(name, datetime.now())
     previous_punch = Punch.query.filter_by(
         name=name).order_by(Punch.time.desc()).first()
-    time_between = new_punch - previous_punch
-
-    if time_between > 120:
-        db.session.add(new_punch)
-        db.session.commit()
-    else:
-        return 'You punched too fast. Please wait at least 2 minutes before punching again.', 403
+    if previous_punch:
+        time_between = new_punch.time - previous_punch.time
+        if time_between.seconds < 120:
+            return 'You punched too fast. Please wait at least 2 minutes before punching again.', 403
+    db.session.add(new_punch)
+    db.session.commit()
+    return 'Punch recorded at {}'.format(new_punch.time)
 
 
 @app.route('/view/')
-def view():
-    punches = Punch.query.all()
-    return render_template('view.html', {'punches': punches})
+def all_punches():
+    punches = Punch.query.order_by(Punch.time.desc())
+    return render_template('view.html', punches=punches)
+
+
+@app.route('/view/totals/')
+def time_totals():
+    people = [name[0]
+              for name in db.session.query(Punch.name.distinct()).all()]
+    total = {}
+    for person in people:
+        punches = Punch.query.filter_by(
+            name=person).order_by(Punch.time)
+        time_in_seconds = 0
+        print "Person: {}".format(person)
+        for punch in punches:
+            print 'Punch: {} {}'.format(punch.time, punch.status)
+        for key, punch in enumerate(punches[1:]):
+            previous_punch = punches[key]
+            if punch.status == 'out' and previous_punch.status == 'in':
+                print "Current punch: {}".format(punch.time)
+                print "Previous punch: {}\n".format(previous_punch.time)
+                time_in_seconds += (punch.time - previous_punch.time).seconds
+        total[person] = ':'.join(
+            str(timedelta(seconds=time_in_seconds)).split(':')[:2])
+    return render_template('totals.html', total=total, people=people)
 
 
 if __name__ == "__main__":
