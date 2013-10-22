@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hour totals</title>
+</head>
+<body>
+{% if total %}
+    <table>
+            <tr>
+                <th>Name</th>
+                <th>Time</th>
+            </tr>
+        {% for name in people %}
+            <tr>
+                <td>{{name}}</td>
+                <td>{{total[name]}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <h3>Sorry. No totals.</h3>
+{% endif %}
+</body>
+</html>
