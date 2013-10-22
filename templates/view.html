@@ -14,7 +14,7 @@
                 </tr>
             {% for punch in punches %}
                 <tr>
-                    <td>{{punch.time}}</td>
+                    <td>{{punch.time.strftime('%m-%d-%Y %I:%M %p')}}</td>
                     <td>{{punch.name}}</td>
                     <td>{{punch.status}}</td>
                 </tr>
