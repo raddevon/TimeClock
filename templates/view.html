@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View punches</title>
+</head>
+<body>
+    {% if punches %}
+        <table>
+                <tr>
+                    <th>Time</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                </tr>
+            {% for punch in punches %}
+                <tr>
+                    <td>{{punch.time}}</td>
+                    <td>{{punch.name}}</td>
+                    <td>{{punch.status}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <h3>No punches have been recorded.</h3>
+    {% endif %}
+</body>
+</html>
