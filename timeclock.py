@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
+from sqlalchemy import distinct
 import os
 from datetime import datetime
 
