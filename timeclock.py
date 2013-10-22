@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
 import os
 form datetime import datetime
@@ -41,5 +41,13 @@ def punch(name):
         db.session.commit()
     else:
         return 'You punched too fast. Please wait at least 2 minutes before punching again.', 403
+
+
+@app.route('/view/')
+def view():
+    punches = Punch.query.all()
+    return render_template('view.html', {'punches': punches})
+
+
 if __name__ == "__main__":
     app.run()
