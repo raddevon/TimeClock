@@ -1,1 +1,1 @@
-web: gunicorn time-clock:app
+web: gunicorn timeclock:app
