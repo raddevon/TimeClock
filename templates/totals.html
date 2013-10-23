@@ -1,25 +1,23 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Hour totals</title>
-</head>
-<body>
-{% if total %}
-    <table>
-            <tr>
-                <th>Name</th>
-                <th>Time</th>
-            </tr>
-        {% for name in people %}
-            <tr>
-                <td>{{name}}</td>
-                <td>{{total[name]}}</td>
-            </tr>
-        {% endfor %}
-    </table>
-{% else %}
-    <h3>Sorry. No totals.</h3>
-{% endif %}
-</body>
-</html>
+{% extends 'date-picker.html' %}
+{% block title %}Hour totals{% endblock %}
+{% block content %}
+{{ super() }}
+    {% if total %}
+        <table class="pure-table pure-table-striped">
+                <thead>
+                    <th>Name</th>
+                    <th>Time</th>
+                </thead>
+            {% for name in people %}
+                <tr>
+                    <td{% if errors[name] %} class="error"{% endif %}>{{name}}</td>
+                    <td>{{total[name]}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <p>Names in <span class="error">red</span> have an outstanding punch.</p>
+    {% else %}
+        <h3>Sorry. No totals.</h3>
+    {% endif %}
+{% endblock %}
+{% block action %}/view/totals{% endblock %}
