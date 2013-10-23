@@ -100,21 +100,27 @@ def time_totals():
         context['to_val'] = request.form['to']
         context['from_val'] = request.form['from']
     for person in people:
-        punches = Punch.query.filter_by(
-            name=person).order_by(Punch.time)
+        if request.method == 'POST':
+            punches = Punch.query.filter_by(
+                name=person).filter(Punch.time <= end_date).filter(
+                    Punch.time >= start_date).order_by(Punch.time)
+        else:
+            punches = Punch.query.filter_by(
+                name=person).order_by(Punch.time)
         time_in_seconds = 0
-        print "Person: {}".format(person)
-        for punch in punches:
-            print 'Punch: {} {}'.format(punch.time, punch.status)
         for key, punch in enumerate(punches[1:]):
             previous_punch = punches[key]
             if punch.status == 'out' and previous_punch.status == 'in':
-                print "Current punch: {}".format(punch.time)
-                print "Previous punch: {}\n".format(previous_punch.time)
-                time_in_seconds += (punch.time - previous_punch.time).seconds
-        total[person] = ':'.join(
-            str(timedelta(seconds=time_in_seconds)).split(':')[:2])
-    return render_template('totals.html', total=total, people=people)
+                time_in_seconds += (
+                    punch.time - previous_punch.time).seconds
+                errors[person] = False
+            else:
+                errors[person] = True
+            total[person] = ':'.join(
+                str(timedelta(seconds=time_in_seconds)).split(':')[:2])
+            context['total'] = total
+            context['errors'] = errors
+    return render_template('totals.html', **context)
 
 
 if __name__ == "__main__":
