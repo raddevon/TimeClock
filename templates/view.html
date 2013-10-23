@@ -1,17 +1,14 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>View punches</title>
-</head>
-<body>
+{% extends 'date-picker.html' %}
+{% block title %}View punches{% endblock %}
+{%block content %}
+{{ super() }}
     {% if punches %}
-        <table>
-                <tr>
+        <table class="pure-table pure-table-striped">
+                <thead>
                     <th>Time</th>
                     <th>Name</th>
                     <th>Status</th>
-                </tr>
+                </thead>
             {% for punch in punches %}
                 <tr>
                     <td>{{punch.time.strftime('%m-%d-%Y %I:%M %p')}}</td>
@@ -23,5 +20,5 @@
     {% else %}
         <h3>No punches have been recorded.</h3>
     {% endif %}
-</body>
-</html>
+{% endblock %}
+{% block action %}/view/{% endblock %}
