@@ -1,0 +1,9 @@
+<div class="filters">
+    <form action="{% block action %}{% endblock %}" method="POST" class="pure-form pure-form-stacked">
+        <label for="from">From: </label>
+        <input type="text" id="from" name="from" value="{{ from_val }}">
+        <label for="to">To: </label>
+        <input type="text" id="to" name="to" value="{{ to_val }}">
+        <input type="submit" value="Filter" class="pure-button">
+    </form>
+</div>
