@@ -4,7 +4,10 @@ from sqlalchemy import distinct
 import os
 from datetime import datetime, timedelta
 
-app = Flask(__name__)
+STATIC_PATH = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), 'assets')
+
+app = Flask(__name__, static_folder=STATIC_PATH)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = SQLAlchemy(app)
 
