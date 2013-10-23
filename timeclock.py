@@ -33,7 +33,25 @@ class Punch(db.Model):
             self.status = 'in'
 
     def __repr__(self):
-        return '<Punch {} at {}>'.format(self.name, self.time.strftime('%m-%d-%y %H:%M'))
+        return '<Punch {} {} at {}>'.format(self.status, self.name, self.time.strftime('%m-%d-%y %H:%M'))
+
+
+def construct_datetime(date, end_date=False):
+    if date:
+        date = [int(num) for num in date.split('-')]
+    elif end_date:
+        return datetime.now()
+    else:
+        return datetime(1900, 1, 1)
+
+    if end_date:
+        return datetime(2000 + date[2], date[0], date[1], 23, 59, 59)
+    else:
+        return datetime(2000 + date[2], date[0], date[1])
+
+
+def swap_delimiter(date):
+    return date.replace('/', '-')
 
 
 @app.route('/punch/<name>/')
