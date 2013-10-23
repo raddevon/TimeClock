@@ -62,7 +62,7 @@ def punch(name):
     if previous_punch:
         time_between = new_punch.time - previous_punch.time
         if time_between.seconds < 120:
-            return 'You punched too fast. Please wait at least 2 minutes before punching again.', 403
+            return 'You punched too fast. Please wait {} seconds longer before punching again.'.format(str(120 - time_between.seconds)), 403
     db.session.add(new_punch)
     db.session.commit()
     return 'Punch recorded at {}'.format(new_punch.time)
