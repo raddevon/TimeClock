@@ -75,15 +75,30 @@ def home():
 
 @app.route('/view/', methods=['GET', 'POST'])
 def all_punches():
+    if request.method == 'POST':
+        start_date = construct_datetime(swap_delimiter(request.form['from']))
+        end_date = construct_datetime(
+            swap_delimiter(request.form['to']), True)
+        punches = Punch.query.filter(Punch.time <= end_date).filter(
+            Punch.time >= start_date).order_by(Punch.time.desc())
+        return render_template('view.html', punches=punches, to_val=request.form['to'], from_val=request.form['from'])
     punches = Punch.query.order_by(Punch.time.desc())
     return render_template('view.html', punches=punches)
 
 
-@app.route('/view/totals/')
+@app.route('/view/totals/', methods=['GET', 'POST'])
 def time_totals():
     people = [name[0]
               for name in db.session.query(Punch.name.distinct()).all()]
     total = {}
+    errors = {}
+    context = {'people': sorted(people, key=unicode.lower)}
+    if request.method == 'POST':
+        start_date = construct_datetime(swap_delimiter(request.form['from']))
+        end_date = construct_datetime(
+            swap_delimiter(request.form['to']), True)
+        context['to_val'] = request.form['to']
+        context['from_val'] = request.form['from']
     for person in people:
         punches = Punch.query.filter_by(
             name=person).order_by(Punch.time)
