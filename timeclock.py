@@ -68,7 +68,12 @@ def punch(name):
     return 'Punch {} recorded at {}'.format(new_punch.status, new_punch.time)
 
 
-@app.route('/view/')
+@app.route('/')
+def home():
+    return redirect('/view/')
+
+
+@app.route('/view/', methods=['GET', 'POST'])
 def all_punches():
     punches = Punch.query.order_by(Punch.time.desc())
     return render_template('view.html', punches=punches)
