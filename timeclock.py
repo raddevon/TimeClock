@@ -65,7 +65,7 @@ def punch(name):
             return 'You punched too fast. Please wait {} seconds longer before punching again.'.format(str(120 - time_between.seconds)), 403
     db.session.add(new_punch)
     db.session.commit()
-    return 'Punch recorded at {}'.format(new_punch.time)
+    return 'Punch {} recorded at {}'.format(new_punch.status, new_punch.time)
 
 
 @app.route('/view/')
