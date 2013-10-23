@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}View punches{% endblock %}</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.3.0/pure-min.css">
+    <style>
+        body { padding: 1em; }
+        form { margin-bottom: 1em;}
+        .error { background: salmon !important; }
+    </style>
+    {% block styles %}{% endblock %}
+</head>
+<body>
+{% block content %}{% endblock %}
+{% block scripts %}{% endblock %}
+</body>
+</html>
