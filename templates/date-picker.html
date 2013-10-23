@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/default.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/default.date.css') }}">
+{% endblock %}
+
+{% block content %}
+{% include 'partials/date-filter.html' %}
+{% endblock %}
+
+{% block scripts %}
+<script src="http://codeorigin.jquery.com/jquery-2.0.3.min.js"></script>
+<script src="{{ url_for('static', filename='js/picker.js') }}"></script>
+<script src="{{ url_for('static', filename='js/picker.date.js') }}"></script>
+<script>
+    $('#from, #to'). pickadate({
+        format: 'mm/dd/yy'
+    });
+
+    $('.filters').on('click', '#from, #to', function() {
+
+    })
+</script>
+{% endblock %}
