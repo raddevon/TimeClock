@@ -151,19 +151,21 @@ def time_totals():
         else:
             punches = Punch.query.filter_by(
                 name=person).order_by(Punch.time)
-        time_in_seconds = 0
+        time = timedelta()
         for key, punch in enumerate(punches[1:]):
             previous_punch = punches[key]
             if punch.status == 'out' and previous_punch.status == 'in':
-                time_in_seconds += (
-                    punch.time - previous_punch.time).seconds
+                time += (
+                    punch.time - previous_punch.time)
                 errors[person] = False
-            else:
+            elif key == len(punches[1:]) - 1:
                 errors[person] = True
-            total[person] = ':'.join(
-                str(timedelta(seconds=time_in_seconds)).split(':')[:2])
-            context['total'] = total
-            context['errors'] = errors
+            seconds = time.total_seconds()
+            hours = int(seconds // 3600)
+            minutes = int((seconds % 3600) // 60)
+            total[person] = '{}:{:02d}'.format(hours, minutes)
+        context['total'] = total
+        context['errors'] = errors
     return render_template('totals.html', **context)
 
 
