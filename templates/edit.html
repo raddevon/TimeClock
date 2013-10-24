@@ -1,0 +1,27 @@
+{% extends 'date-picker.html' %}
+{% block title %}Edit punch{% endblock %}
+{% block content %}
+<form action="/{{ operation }}/{% if id %}{{ id }}/{% endif %}" method="POST" class="pure-form pure-form-stacked" id="edit-form">
+    <label for="date">Date:</label>
+    <input type="text" id="date" name="date" value="{{ date }}">
+    <label for="time">Time:</label>
+    <input type="text" id="time" name="time" placeholder="00:00" value="{{ time }}">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" value="{{ name }}">
+    <label for="status">Status: </label>
+    <select name="status" id="status" value="{{ status }}">
+        <option value="in">In</option>
+        <option value="out">Out</option>
+    </select>
+    <input type="submit" value="Save" name="action" class="pure-button">
+    <input type="submit" value="Delete" name="action" class="pure-button pure-button-delete">
+</form>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script>
+    $('#date').pickadate({
+        format: 'mm/dd/yyyy'
+    });
+</script>
+{% endblock %}
