@@ -65,7 +65,7 @@ def process_punch_form(form_data):
 
 @app.route('/punch/<name>/')
 def punch(name):
-    new_punch = Punch(name, datetime.now())
+    new_punch = Punch(name)
     previous_punch = Punch.query.filter_by(
         name=name).order_by(Punch.time.desc()).first()
     if previous_punch:
