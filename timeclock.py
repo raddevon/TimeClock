@@ -18,19 +18,22 @@ class Punch(db.Model):
     time = db.Column(db.DateTime())
     status = db.Column(db.Enum('in', 'out', name='status'))
 
-    def __init__(self, name, time):
+    def __init__(self, name, time=datetime.now(), status=None):
         self.name = name
         self.time = time
 
         previous_punch = Punch.query.filter_by(
             name=name).order_by(Punch.time.desc()).first()
 
-        if not previous_punch:
-            self.status = 'in'
-        elif previous_punch.status == 'in':
-            self.status = 'out'
+        if not status:
+            if not previous_punch:
+                self.status = 'in'
+            elif previous_punch.status == 'in':
+                self.status = 'out'
+            else:
+                self.status = 'in'
         else:
-            self.status = 'in'
+            self.status = status
 
     def __repr__(self):
         return '<Punch {} {} at {}>'.format(self.status, self.name, self.time.strftime('%m-%d-%y %H:%M'))
