@@ -57,6 +57,12 @@ def swap_delimiter(date):
     return date.replace('/', '-')
 
 
+def process_punch_form(form_data):
+    date = [int(num) for num in form_data['date'].split('/')]
+    time = [int(num) for num in form_data['time'].split(':')]
+    return form_data['name'], datetime(date[2], date[0], date[1], *time), form_data['status']
+
+
 @app.route('/punch/<name>/')
 def punch(name):
     new_punch = Punch(name, datetime.now())
