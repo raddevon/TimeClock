@@ -5,12 +5,14 @@
     {% if punches %}
         <table class="pure-table pure-table-striped">
                 <thead>
+                    <th></th>
                     <th>Time</th>
                     <th>Name</th>
                     <th>Status</th>
                 </thead>
             {% for punch in punches %}
                 <tr>
+                    <td><a href="/edit/{{ punch.id }}" class="pure-button pure-button-edit">Edit</a></td>
                     <td>{{punch.time.strftime('%m-%d-%Y %I:%M %p')}}</td>
                     <td>{{punch.name}}</td>
                     <td>{{punch.status}}</td>
