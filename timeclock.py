@@ -77,6 +77,41 @@ def punch(name):
     return 'Punch {} recorded at {}'.format(new_punch.status, new_punch.time)
 
 
+@app.route('/edit/<int:punch_id>/', methods=['GET', 'POST'])
+def edit_punch(punch_id):
+    punch = Punch.query.get(punch_id)
+    if not punch:
+        return 'This punch does not exist.', 404
+    if request.method == 'POST':
+        if request.form['action'] == 'Delete':
+            db.session.delete(punch)
+            db.session.commit()
+            return redirect('/view/')
+        punch.name, punch.time, punch.status = process_punch_form(request.form)
+        db.session.add(punch)
+        db.session.commit()
+        return redirect('/view/')
+    else:
+        context = {
+            'name': punch.name,
+            'status': punch.status,
+            'date': '{}/{}/{}'.format(punch.time.month, punch.time.day, punch.time.year),
+            'time': '{:02d}:{:02d}'.format(punch.time.hour, punch.time.minute),
+            'id': punch.id
+        }
+        return render_template('edit.html', operation='edit', **context)
+
+
+@app.route('/add/', methods=['GET', 'POST'])
+def add_punch():
+    if request.method == 'POST':
+        punch = Punch(*process_punch_form(request.form))
+        db.session.add(punch)
+        db.session.commit()
+        return redirect('/view/')
+    return render_template('edit.html', operation='add')
+
+
 @app.route('/')
 def home():
     return redirect('/view/')
