@@ -48,9 +48,9 @@ def construct_datetime(date, end_date=False):
         return datetime(1900, 1, 1)
 
     if end_date:
-        return datetime(2000 + date[2], date[0], date[1], 23, 59, 59)
+        return datetime(date[2], date[0], date[1], 23, 59, 59)
     else:
-        return datetime(2000 + date[2], date[0], date[1])
+        return datetime(date[2], date[0], date[1])
 
 
 def swap_delimiter(date):
@@ -65,6 +65,7 @@ def process_punch_form(form_data):
 
 @app.route('/punch/<name>/')
 def punch(name):
+    # Will not let Brandon punch. Says 103 seconds
     new_punch = Punch(name)
     previous_punch = Punch.query.filter_by(
         name=name).order_by(Punch.time.desc()).first()
@@ -119,6 +120,7 @@ def home():
 
 @app.route('/view/', methods=['GET', 'POST'])
 def all_punches():
+    # Filtering is broken
     if request.method == 'POST':
         start_date = construct_datetime(swap_delimiter(request.form['from']))
         end_date = construct_datetime(
