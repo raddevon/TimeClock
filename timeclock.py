@@ -18,9 +18,9 @@ class Punch(db.Model):
     time = db.Column(db.DateTime())
     status = db.Column(db.Enum('in', 'out', name='status'))
 
-    def __init__(self, name, time=datetime.now(), status=None):
+    def __init__(self, name, time=None, status=None):
         self.name = name
-        self.time = time
+        self.time = time or datetime.now()
 
         previous_punch = Punch.query.filter_by(
             name=name).order_by(Punch.time.desc()).first()
