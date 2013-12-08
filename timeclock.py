@@ -22,7 +22,7 @@ class Punch(db.Model):
 
     def __init__(self, name, time=None, status=None):
         self.name = name
-        self.time = time or datetime.now()
+        self.time = time or datetime.utcnow()
 
         previous_punch = Punch.query.filter_by(
             name=name).order_by(Punch.time.desc()).first()
@@ -45,7 +45,7 @@ def construct_datetime(date, end_date=False):
     if date:
         date = [int(num) for num in date.split('-')]
     elif end_date:
-        return datetime.now()
+        return datetime.utcnow()
     else:
         return datetime(1900, 1, 1)
 
@@ -77,7 +77,7 @@ def punch(name):
             return 'You punched too fast. Please wait {} seconds longer before punching again.'.format(str(120 - time_between.seconds)), 403
     db.session.add(new_punch)
     db.session.commit()
-    return 'Punch {} recorded at {}'.format(new_punch.status, new_punch.time)
+    return 'Punch {} recorded at {} UTC'.format(new_punch.status, new_punch.time)
 
 
 @app.route('/edit/<int:punch_id>/', methods=['GET', 'POST'])
