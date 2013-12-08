@@ -11,6 +11,7 @@ STATIC_PATH = os.path.join(
 app = Flask(__name__, static_folder=STATIC_PATH)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = SQLAlchemy(app)
+app.jinja_env.globals['momentjs'] = momentjs
 
 
 class Punch(db.Model):
