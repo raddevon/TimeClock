@@ -122,7 +122,6 @@ def home():
 
 @app.route('/view/', methods=['GET', 'POST'])
 def all_punches():
-    # Filtering is broken
     if request.method == 'POST':
         start_date = construct_datetime(swap_delimiter(request.form['from']))
         end_date = construct_datetime(
@@ -168,6 +167,8 @@ def time_totals():
             hours = int(seconds // 3600)
             minutes = int((seconds % 3600) // 60)
             total[person] = '{}:{:02d}'.format(hours, minutes)
+        if len(punches.all()) == 1:
+            errors[person] = True
         context['total'] = total
         context['errors'] = errors
     return render_template('totals.html', **context)
