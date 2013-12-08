@@ -13,7 +13,7 @@
             {% for punch in punches %}
                 <tr>
                     <td><a href="/edit/{{ punch.id }}" class="pure-button pure-button-edit">Edit</a></td>
-                    <td>{{punch.time.strftime('%m-%d-%Y %I:%M %p')}}</td>
+                    <td>{{momentjs(punch.time).format('MM-DD-YYYY hh:mm A')}}</td>
                     <td>{{punch.name}}</td>
                     <td>{{punch.status}}</td>
                 </tr>
