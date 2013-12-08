@@ -135,40 +135,58 @@ def all_punches():
 
 @app.route('/view/totals/', methods=['GET', 'POST'])
 def time_totals():
+    # Gets distinct people
     people = [name[0]
               for name in db.session.query(Punch.name.distinct()).all()]
+
     total = {}
     errors = {}
+
+    # Adds people to context object
     context = {'people': sorted(people, key=unicode.lower)}
+
+    # Creates date filters when request is POST
     if request.method == 'POST':
         start_date = construct_datetime(swap_delimiter(request.form['from']))
         end_date = construct_datetime(
             swap_delimiter(request.form['to']), True)
         context['to_val'] = request.form['to']
         context['from_val'] = request.form['from']
+
     for person in people:
+        # Applies date filters when request is POST
         if request.method == 'POST':
             punches = Punch.query.filter_by(
                 name=person).filter(Punch.time <= end_date).filter(
                     Punch.time >= start_date).order_by(Punch.time)
+        # Or grabs all punches
         else:
             punches = Punch.query.filter_by(
                 name=person).order_by(Punch.time)
+
         time = timedelta()
+
         for key, punch in enumerate(punches[1:]):
             previous_punch = punches[key]
+
+            # Flags errors for users punched in but not yet punched out
             if punch.status == 'out' and previous_punch.status == 'in':
                 time += (
                     punch.time - previous_punch.time)
                 errors[person] = False
             elif key == len(punches[1:]) - 1:
                 errors[person] = True
+
+            # Calculates totals
             seconds = time.total_seconds()
             hours = int(seconds // 3600)
             minutes = int((seconds % 3600) // 60)
             total[person] = '{}:{:02d}'.format(hours, minutes)
-        if len(punches.all()) == 1:
+
+        # Flags error if user has only a single in punch
+        if len(punches.all()) == 1 and punches[0].status == 'in':
             errors[person] = True
+
         context['total'] = total
         context['errors'] = errors
     return render_template('totals.html', **context)
