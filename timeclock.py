@@ -48,6 +48,11 @@ def process_punch_form(form_data):
     return form_data['name'], datetime(date[2], date[0], date[1], *time), form_data['status']
 
 
+@app.route('/')
+def ready():
+    return render_template('ready.html')
+
+
 @app.route('/punch/<name>/')
 def punch(name):
     # Will not let Brandon punch. Says 103 seconds
