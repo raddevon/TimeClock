@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+<meta http-equiv="refresh" content="5;url=/" />
+{% endblock %}
+
+{% block content %}
+{% if timeout %}
+    <h1>Punch error!</h1>
+    <h2>Punch again in {{ timeout }} seconds.</h2>
+{% else %}
+    <h1>Punch recorded</h1>
+    <h2>{{ name }} punched {{ status }}</h2>
+{% endif %}
+{% endblock %}
