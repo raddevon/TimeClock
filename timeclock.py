@@ -104,11 +104,6 @@ def add_punch():
     return render_template('edit.html', operation='add')
 
 
-@app.route('/')
-def home():
-    return redirect('/view/')
-
-
 @app.route('/view/', methods=['GET', 'POST'])
 def all_punches():
     if request.method == 'POST':
