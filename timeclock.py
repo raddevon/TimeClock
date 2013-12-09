@@ -41,27 +41,10 @@ class Punch(db.Model):
         return '<Punch {} {} at {}>'.format(self.status, self.name, self.time.strftime('%m-%d-%y %H:%M'))
 
 
-def construct_datetime(date, end_date=False):
-    if date:
-        date = [int(num) for num in date.split('-')]
-    elif end_date:
-        return datetime.utcnow()
-    else:
-        return datetime(1900, 1, 1)
-
-    if end_date:
-        return datetime(date[2], date[0], date[1], 23, 59, 59)
-    else:
-        return datetime(date[2], date[0], date[1])
-
-
-def swap_delimiter(date):
-    return date.replace('/', '-')
-
-
 def process_punch_form(form_data):
-    date = [int(num) for num in form_data['date'].split('/')]
-    time = [int(num) for num in form_data['time'].split(':')]
+    full_date, full_time = [item for item in form_data['utc'].split(' ')]
+    date = [int(num) for num in full_date.split('-')]
+    time = [int(num) for num in full_time.split(':')]
     return form_data['name'], datetime(date[2], date[0], date[1], *time), form_data['status']
 
 
@@ -123,9 +106,8 @@ def home():
 @app.route('/view/', methods=['GET', 'POST'])
 def all_punches():
     if request.method == 'POST':
-        start_date = construct_datetime(swap_delimiter(request.form['from']))
-        end_date = construct_datetime(
-            swap_delimiter(request.form['to']), True)
+        start_date = request.form['from']
+        end_date = request.form['to']
         punches = Punch.query.filter(Punch.time <= end_date).filter(
             Punch.time >= start_date).order_by(Punch.time.desc())
         return render_template('view.html', punches=punches, to_val=request.form['to'], from_val=request.form['from'])
@@ -147,9 +129,8 @@ def time_totals():
 
     # Creates date filters when request is POST
     if request.method == 'POST':
-        start_date = construct_datetime(swap_delimiter(request.form['from']))
-        end_date = construct_datetime(
-            swap_delimiter(request.form['to']), True)
+        start_date = request.form['from']
+        end_date = request.form['to']
         context['to_val'] = request.form['to']
         context['from_val'] = request.form['from']
 
