@@ -165,7 +165,7 @@ def time_totals():
             total[person] = '{}:{:02d}'.format(hours, minutes)
 
         # Flags error if user has only a single in punch
-        if len(punches.all()) == 1 and punches[0].status == 'in':
+        if len(punches.all()) == 1:
             errors[person] = True
 
         context['total'] = total
