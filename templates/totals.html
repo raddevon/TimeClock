@@ -1,6 +1,13 @@
 {% extends 'date-picker.html' %}
 {% block title %}Hour totals{% endblock %}
 {% block content %}
+<h1>Time Clock: Hour Totals</h1>
+<div class="pure-menu pure-menu-horizontal pure-menu-open">
+    <ul>
+        <li><a href="/view/">All Punches</a></li>
+        <li class="pure-menu-selected">Hour Totals</li>
+    </ul>
+</div>
 {{ super() }}
     {% if total %}
         <table class="pure-table pure-table-striped">
