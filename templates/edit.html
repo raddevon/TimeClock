@@ -6,12 +6,13 @@
     <input type="text" id="date" name="date" value="{{ date }}">
     <label for="time">Time:</label>
     <input type="text" id="time" name="time" placeholder="00:00" value="{{ time }}">
+    <input type="hidden" id="utc" name="utc">
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" value="{{ name }}">
     <label for="status">Status: </label>
-    <select name="status" id="status" value="{{ status }}">
-        <option value="in">In</option>
-        <option value="out">Out</option>
+    <select name="status" id="status">
+        <option value="in"{% if status == 'in' %} selected='selected'{% endif %}>In</option>
+        <option value="out"{% if status == 'out' %} selected='selected'{% endif %}>Out</option>
     </select>
     <input type="submit" value="Save" name="action" class="pure-button">
     <input type="submit" value="Delete" name="action" class="pure-button pure-button-delete">
@@ -20,8 +21,31 @@
 {% block scripts %}
 {{ super() }}
 <script>
-    $('#date').pickadate({
+    var $dateField = $('#date');
+    var $timeField = $('#time');
+    var $utcField = $('#utc');
+
+    $dateField.pickadate({
         format: 'mm/dd/yyyy'
     });
+
+    $('[type=submit]').on('click', function() {
+        $('#utc').val($dateField.val() + ' ' + $timeField.val());
+        var newDate = moment($utcField.val(), 'MM/DD/YYYY HH:mm:ss').utc().format('MM-DD-YYYY HH:mm:ss');
+        $utcField.val(newDate);
+
+        $(this).parent().submit();
+    });
+
+    if ($dateField.val() && $timeField.val()) {
+        $utcField.val($dateField.val() + ' ' + $timeField.val());
+    }
+
+    if ($utcField.val()) {
+        var newDate = moment.utc($utcField.val(), 'MM-DD-YYYY HH:mm:ss').local().format('MM/DD/YYYY');
+        $dateField.val(newDate);
+        var newTime = moment.utc($utcField.val(), 'MM-DD-YYYY HH:mm:ss').local().format('HH:mm:ss');
+        $timeField.val(newTime);
+    }
 </script>
 {% endblock %}
