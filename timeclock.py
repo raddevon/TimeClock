@@ -55,17 +55,18 @@ def ready():
 
 @app.route('/punch/<name>/')
 def punch(name):
-    # Will not let Brandon punch. Says 103 seconds
     new_punch = Punch(name)
     previous_punch = Punch.query.filter_by(
         name=name).order_by(Punch.time.desc()).first()
+    context = {'name': name, 'status': new_punch.status}
     if previous_punch:
         time_between = new_punch.time - previous_punch.time
         if time_between.seconds < 120:
-            return 'You punched too fast. Please wait {} seconds longer before punching again.'.format(str(120 - time_between.seconds)), 403
+            context['timeout'] = str(120 - time_between.seconds)
+            return render_template('punch.html', **context)
     db.session.add(new_punch)
     db.session.commit()
-    return 'Punch {} recorded at {} UTC'.format(new_punch.status, new_punch.time)
+    return render_template('punch.html', **context)
 
 
 @app.route('/edit/<int:punch_id>/', methods=['GET', 'POST'])
