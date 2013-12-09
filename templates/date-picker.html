@@ -21,6 +21,25 @@
 
     $('.filters').on('click', '#from, #to', function() {
 
-    })
+    });
+
+    $('[type=submit]').on('click', function() {
+        var $fromField = $('#from');
+        var newFrom = moment($fromField.val() + ' 00:00:00', 'MM/DD/YYYY HH:mm:ss').utc().format('YYYY-MM-DD HH:mm:ss');
+        $fromField.val(newFrom);
+
+        var $toField = $('#to');
+        var newTo = moment($toField.val() + ' 23:59:59', 'MM/DD/YYYY HH:mm:ss').utc().format('YYYY-MM-DD HH:mm:ss');
+        $toField.val(newTo);
+
+        $(this).parent().submit();
+    });
+    $('#from, #to').each(function() {
+        var $this = $(this);
+        if ($this.val()) {
+            var newVal = moment.utc($this.val()).local().format('MM/DD/YYYY');
+            $this.val(newVal);
+        }
+    });
 </script>
 {% endblock %}
